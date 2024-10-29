@@ -13,7 +13,7 @@
 
 &i2c0 {
     lcd_screen: lcd@27 {
-        compatible = "some-i2c-lcd";
+        compatible = "i2c-device";
         reg = <0x27>;
     };
 };
