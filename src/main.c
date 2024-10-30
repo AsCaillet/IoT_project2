@@ -11,6 +11,7 @@
 #include <zephyr/drivers/i2c.h>
 #include <zephyr/devicetree.h>
 #include <zephyr/drivers/sensor.h>
+#include <zephyr/drivers/adc.h>
 
 #define LED_YELLOW_NODE DT_ALIAS(led_yellow)
 #define LCD_I2C_NODE DT_NODELABEL(lcd_screen)
@@ -33,21 +34,26 @@ int main(void)
 
 	// LED ON
 	gpio_pin_configure_dt(&led_yellow_gpio, GPIO_OUTPUT_HIGH);
+	
+	while(1){
+		// Variables pour la temp et l'hum
+		struct sensor_value temperature, humidity;
 
-	// Variables pour la temp et l'hum
-	struct sensor_value temperature, humidity;
+		// Data capteur
+		sensor_sample_fetch(dht11);
+		
+		// Obtenir temperature et humidite
+		sensor_channel_get(dht11, SENSOR_CHAN_AMBIENT_TEMP, &temperature);
+		sensor_channel_get(dht11, SENSOR_CHAN_HUMIDITY, &humidity);
 
-	// Data capteur
-	sensor_sample_fetch(dht11);
+		// Convers° des valeurs pour l'affichage
+		int temp = sensor_value_to_double(&temperature);
+		int hum = sensor_value_to_double(&humidity);
 
-	// Obtenir temperature et humidite
-	sensor_channel_get(dht11, SENSOR_CHAN_AMBIENT_TEMP, &temperature);
-	sensor_channel_get(dht11, SENSOR_CHAN_HUMIDITY, &humidity);
-
-	// Convers° des valeurs pour l'affichage
-	int temp = sensor_value_to_double(&temperature);
-	int hum = sensor_value_to_double(&humidity);
-
-	printf("Temperature = %d\n",temp);
-	printf("Humidite = %d\n",hum);
+		
+		printf("Temperature = %d\n",temp);
+		printf("Humidite = %d\n",hum);
+		k_sleep(K_SECONDS(10));
+	}
+	
 }
