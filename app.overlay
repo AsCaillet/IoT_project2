@@ -27,6 +27,8 @@
     };
     aliases {
         led-yellow = &ledyellow;
+        button-0 = &button0;
+        button-1 = &button1;
     };  
 };
 
