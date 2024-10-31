@@ -87,7 +87,7 @@ int main(void)
 		/*thread_capteur_temp_hum();
 		thread_capteur_adc();
 		thread_sensor_button();*/
-		k_sleep(K_SECONDS(2));
+		k_sleep(K_SECONDS(10));
 	}
 }
 
@@ -110,7 +110,7 @@ void thread_capteur_temp_hum() {
 			
 		printf("Temperature = %d\n",temp);
 		printf("Humidite = %d\n",hum);
-		k_sleep(K_SECONDS(2));
+		k_sleep(K_SECONDS(10));
 	}
 }
 
@@ -177,9 +177,9 @@ void thread_capteur_adc() {
 					printk(" = %"PRId32" mV\n", val_mv);
 				}
 			}
-		k_sleep(K_SECONDS(2));
+		k_sleep(K_SECONDS(10));
 	}
-	k_sleep(K_SECONDS(2));
+	k_sleep(K_SECONDS(10));
 	}
 	
 
