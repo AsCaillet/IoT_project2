@@ -66,6 +66,10 @@ const struct gpio_dt_spec button_0_gpio = GPIO_DT_SPEC_GET_OR(BUTTON_1_NODE, gpi
 
 int main(void)
 {
+	gpio_init_callback(&button_cb_data, button_pressed, BIT(button.pin));
+	gpio_add_callback(button.port, &button_cb_data);
+	printk("Set up button at %s pin %d\n", button.port->name, button.pin);
+
 	// Init device
     init_lcd(&dev_lcd_screen);
 	
@@ -80,7 +84,6 @@ int main(void)
 	gpio_pin_configure_dt(&led_yellow_gpio, GPIO_OUTPUT_HIGH);
 	k_sleep(K_SECONDS(2));
 	while(1){
-		printk("test");
 		/*thread_capteur_temp_hum();
 		thread_capteur_adc();
 		thread_sensor_button();*/
@@ -204,12 +207,10 @@ void thread_sensor_button() {
 				ret, button.port->name, button.pin);
 		}
 
-		gpio_init_callback(&button_cb_data, button_pressed, BIT(button.pin));
-		gpio_add_callback(button.port, &button_cb_data);
-		printk("Set up button at %s pin %d\n", button.port->name, button.pin);
+		
 	
 }
 
 K_THREAD_DEFINE(thread_button, 521, thread_sensor_button, NULL, NULL, NULL, 9, 0, 0);
-//K_THREAD_DEFINE(thread_temp_hum, 521, thread_capteur_temp_hum, NULL, NULL, NULL, 9, 0, 0);
+K_THREAD_DEFINE(thread_temp_hum, 521, thread_capteur_temp_hum, NULL, NULL, NULL, 9, 0, 0);
 K_THREAD_DEFINE(thread_adc, 521, thread_capteur_adc, NULL, NULL, NULL, 9, 0, 0);
